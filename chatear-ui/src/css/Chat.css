@@ -1,0 +1,257 @@
+#base {
+  width: 100%;
+  height: 100vh;
+  background: #e6eaea;
+}
+
+#base #sidepanel {
+  float: left;
+  min-width: 280px;
+  max-width: 340px;
+  width: 40%;
+  height: 100%;
+  background: #2c3e50;
+  color: #f5f5f5;
+  overflow: hidden;
+  position: relative;
+}
+
+#base #sidepanel #profile {
+  width: 80%;
+  margin: 25px auto;
+}
+
+#base #sidepanel #profile #logoutBtn{
+  margin-top: 10px;
+  height: 40px;
+}
+
+#base #sidepanel #profile:hover {
+  background-color: #32465a;
+  border-radius: 10px;
+}
+
+#base #sidepanel #profile #viewProfile {
+  margin-top: 15px;
+}
+
+#base #sidepanel #profile #userProfile i {
+  padding-top: 10px;
+  margin-left: 15px;
+}
+
+#base #sidepanel #profile #userProfile p {
+  margin: 0;
+}
+
+#base #sidepanel #contacts {
+  height: calc(100% - 177px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#base #sidepanel #contacts::-webkit-scrollbar {
+  width: 8px;
+  background: #2c3e50;
+}
+
+#base #sidepanel #contacts::-webkit-scrollbar-thumb {
+  background-color: #243140;
+}
+
+#base #sidepanel #contacts ul li.contact {
+  position: relative;
+  padding: 10px 0 15px 0;
+  font-size: 0.9em;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  color: #243140;
+}
+
+#base #sidepanel #contacts ul li.contact:hover {
+  background: #e0e0e0;
+}
+
+#base #sidepanel #contacts ul li.contact.active {
+  background: #e0e0e0;
+  border-right: 5px solid #435f7a;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap {
+  width: 88%;
+  margin: 0 auto;
+  position: relative;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap i {
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 10px;
+  height: 10px;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap .meta {
+  padding: 5px 0 0 0;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap .meta .name {
+  font-weight: 600;
+  margin-left: 50px;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap .meta .preview {
+  margin: 5px 0 0 0;
+  padding: 0 0 1px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -moz-transition: 1s all ease;
+  -o-transition: 1s all ease;
+  -webkit-transition: 1s all ease;
+  transition: 1s all ease;
+  color: green;
+}
+
+#base #sidepanel #contacts ul li.contact .wrap .meta .preview span {
+  position: initial;
+  border-radius: initial;
+  background: none;
+  border: none;
+  padding: 0 2px 0 0;
+  margin: 0 0 0 1px;
+  opacity: 0.5;
+}
+
+#base .content {
+  float: right;
+  width: 60%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+@media screen and (max-width: 735px) {
+  #base .content {
+    width: calc(100% - 58px);
+    min-width: 300px !important;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  #base .content {
+    width: calc(100% - 340px);
+  }
+}
+
+#base .content .contact-profile {
+  width: 100%;
+  height: 60px;
+  line-height: 60px;
+  background: #f5f5f5;
+}
+
+#base .content .contact-profile i {
+  width: 40px;
+  float: left;
+  margin: 15px 12px 0 9px;
+}
+
+#base .content .messages {
+  height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+#base .content .messages::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+
+#base .content .messages::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+#base .content .messages ul li {
+  display: inline-block;
+  margin: 5px 15px 5px 15px;
+  width: calc(100% - 25px);
+  font-size: 0.9em;
+}
+
+#base .content .messages ul li:nth-last-child(1) {
+  margin-bottom: 20px;
+}
+
+#base .content .messages ul li.replies i {
+  margin: 6px 8px 0 0;
+}
+
+#base .content .messages ul li.replies p {
+  background:#007bff;
+  color: #f5f5f5;
+}
+
+#base .content .messages ul li.sent p {
+  background: #f5f5f5;
+  float: right;
+}
+
+#base .content .messages ul li p {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  max-width: 205px;
+  line-height: 130%;
+  font-size: 16px;
+  margin: 0;
+}
+
+#base .content .message-input {
+  position: absolute;
+  bottom: 0 !important;
+  width: 100%;
+  z-index: 99;
+}
+
+#base .content .message-input .wrap {
+  position: relative;
+}
+
+#base .content .message-input .wrap input {
+  font-family: "proxima-nova", "Source Sans Pro", sans-serif;
+  float: left;
+  border: none;
+  width: calc(100% - 51px);
+  padding: 14px 32px 8px 8px;
+  font-size: 0.8em;
+  color: #32465a;
+  font-size: 16px;
+}
+
+#base .content .message-input .wrap input:focus {
+  outline: none;
+}
+
+#base .content .message-input .wrap button {
+  float: right;
+  border: none;
+  width: 50px;
+  padding: 12px 0;
+  cursor: pointer;
+  background: #007bff;
+  color: #f5f5f5;
+  height: 48px;
+}
+
+#base .content .message-input .wrap button:hover {
+  background:  #278fff;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
