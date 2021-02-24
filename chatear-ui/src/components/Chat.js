@@ -4,22 +4,25 @@ import {
   countNewMessages,
   findChatMessages,
   getCurrentUser,
-} from "../util/ApiUtil";
+  getLastMessage,
+} from "../util/ApiRequest";
 import { useActivecontacts, useLogedIn, useMessages } from "../context/AuthContext";
-import "../css/Chat.css";
-import { PaperPlane, UserCircle } from "./Icons";
+import { PaperPlane, DotsMenu } from "./Icons";
+import Navbar from "./Navbar";
+import { Search, UserData, AppLogo } from "./UtilComponents";
 
 var stompClient = null;
-const Chat = (props) => {
+function Chat(props) {
+
   const currentUser = useLogedIn();
-  const [text, setText] = useState("");
-  const [contacts, setContacts] = useState([]);
   const aContact = useActivecontacts();
   const userMessages = useMessages();
+  const [text, setText] = useState("");
+  const [contacts, setContacts] = useState([]);
 
   useEffect(() => {
     if (localStorage.getItem("accessToken") === null) {
-      props.history.push("/signin");
+      props.history.push("/login");
     }
     getCurrentUser().then((res) => {
       currentUser.setUser(res);
@@ -27,18 +30,18 @@ const Chat = (props) => {
   }, []);
 
   useEffect(() => {
-    if (currentUser.user != null) {
+    if (currentUser.user != null && contacts.length === 0) {
       connect();
-      loadContacts();
+      handleLoadContacts();
     }
   }, [currentUser.user]);
 
   useEffect(() => {
-    if (aContact.activeContact === undefined) return;
-    findChatMessages(aContact.activeContact.id, currentUser.user.id).then((msgs) =>
-      userMessages.setMessages(msgs)
-    );
-    loadContacts();
+    if (aContact.activeContact !== undefined) {
+      findChatMessages(aContact.activeContact.id, currentUser.user.id).then((msgs) =>
+        userMessages.setMessages(msgs)
+      );
+    }
   }, [aContact.activeContact]);
 
   const connect = () => {
@@ -71,16 +74,16 @@ const Chat = (props) => {
         userMessages.setMessages(msgs)
       );
     }
-    loadContacts();
+    handleLoadContacts();
   };
 
-  const sendMessage = (msg) => {
+  const handleSendMessage = (msg) => {
     if (msg.trim() !== "") {
       const message = {
         senderId: currentUser.user.id,
         recipientId: aContact.activeContact.id,
-        senderName: currentUser.user.username,
-        recipientName: aContact.activeContact.username,
+        senderUsername: currentUser.user.username,
+        recipientUsername: aContact.activeContact.username,
         content: msg,
         timestamp: new Date(),
       };
@@ -92,124 +95,98 @@ const Chat = (props) => {
     }
   };
 
-  const loadContacts = () => {
-    const promise = getUsers().then((users) =>
+  const handleLoadContacts = () => {
 
-      users.map((contact) =>
-        countNewMessages(contact.id, currentUser.user.id).then((count) => {
-          contact.newMessages = count;
-          return contact;
-        })
-      )
-    );
+    getUsers().then((users) => {
 
-    promise.then((promises) =>
-      Promise.all(promises).then((users) => {
-        setContacts(users);
-        if (aContact.activeContact === undefined && users.length > 0) {
-          aContact.setActiveContact(users[0]);
-        }
+      users.map((contact) => {
+        countNewMessages(contact.id, currentUser.user.id).then(count => contact.newMessages = count)
+
+        getLastMessage(contact.id, currentUser.user.id).then(msg => contact.lastMessage = msg.content)
+
+        return contact;
       })
-    );
-  };
-
-  //save contact to get it when new message
-  const saveActiveContact = (contact) => {
-    aContact.setActiveContact(contact);
-    localStorage.setItem("activeContactId", contact.id);
+      setContacts(users);
+    });
   }
 
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("activeContactId");
-    props.history.push("/signin");
-  };
+  const handleSaveActiveContact = (contact) => {
+    aContact.setActiveContact(contact);
+    localStorage.setItem("activeContactId", contact.id); //save contact to get it on new message
+  }
 
   return (
-    <div id="base">
-      <div id="sidepanel">
-        <div id="profile" className="d-flex flex-row justify-content-around">
-          <div id="userProfile">
-            <UserCircle />
-            <p>{currentUser.user ? currentUser.user.username : null}</p>
-          </div>
-          {/*TODO: add User Profile component
-          
-           <span id="viewProfile">View Profile {'>'}</span> */}
-          <button id="logoutBtn" className="btn btn-primary" onClick={() => logout()}>Logout</button>
-        </div>
-        <div id="contacts">
-          <ul>
-            {contacts.map((contact) => (
-              <li
-                onClick={() => saveActiveContact(contact)}
-                className={
-                  aContact.activeContact && contact.id === aContact.activeContact.id
-                    ? "contact active"
-                    : "contact"
-                }
-                key={contact.id}
-              >
-                <div className="wrap">
-                  <UserCircle />
-                  <div className="meta">
-                    <p className="name">{contact.username}</p>
-                    {contact.newMessages !== undefined &&
-                      contact.newMessages > 0 && (
-                        <p className="preview">
-                          {contact.newMessages} new messages
-                        </p>
-                      )}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-
+    <div id="chat">
+      <Navbar history={props.history} user={currentUser.user ? currentUser.user : ""} />
+      <div id="contacts">
+        <div id="searchContainer"><Search /></div>
+        <ul>
+          {contacts.map((contact) => (
+            <li
+              onClick={() => handleSaveActiveContact(contact)}
+              className={
+                aContact.activeContact && contact.id === aContact.activeContact.id
+                  ? "contact active"
+                  : "contact"
+              }
+              key={contact.id}
+            >
+              <div className="ContactMessage">
+                <span><UserData user={contact} isContact={true} /></span>
+                {contact.newMessages !== undefined &&
+                  contact.newMessages > 0 && (
+                    <span className="newMessages">
+                      {contact.newMessages}
+                    </span>
+                  )}
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="content">
-        <div className="contact-profile">
-          <span><UserCircle /></span>
-          <p>{aContact.activeContact && aContact.activeContact.username}</p>
-        </div>
-        <div className="messages">
-          <ul>
-            {userMessages.messages !== undefined ? (userMessages.messages.map((msg) => (
-              <li key={msg.id} className={msg.senderId === currentUser.user.id ? "sent" : "replies"}>
-                {msg.senderId !== currentUser.user.id && (
-                  <UserCircle />
-                )}
-                <p>{msg.content}</p>
-              </li>
-            ))) : null}
-          </ul>
-        </div>
-        <div className="message-input">
-          <div className="wrap">
-            <input
-              name="user_input"
-              size="large"
-              placeholder="Type message..."
-              value={text}
-              onChange={(event) => setText(event.target.value)}
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  sendMessage(text);
+
+      {aContact.activeContact !== undefined ?
+        (
+          <div className="content">
+            <div id="activeContactProfile">
+              <UserData user={aContact.activeContact && aContact.activeContact} />
+              <span className="dotsMenuIcon"><DotsMenu /></span>
+            </div>
+            <div className="messages">
+              <ul>
+                {userMessages.messages !== undefined ? (userMessages.messages.map((msg) => (
+                  <li key={msg.id} className={msg.senderId === currentUser.user.id ? "sent" : "replies"}>
+                    <p>{msg.content}</p>
+                  </li>
+                ))) : null}
+              </ul>
+            </div>
+            <div className="messageInput">
+              <input
+                type="text"
+                name="userInput"
+                size="large"
+                placeholder="Type message..."
+                value={text}
+                onChange={(event) => setText(event.target.value)}
+                onKeyPress={(event) => {
+                  if (event.key === "Enter") {
+                    handleSendMessage(text);
+                    setText("");
+                  }
+                }}
+              />
+
+              <button
+                onClick={() => {
+                  handleSendMessage(text);
                   setText("");
-                }
-              }}
-            />
-
-            <button
-              onClick={() => {
-                sendMessage(text);
-                setText("");
-              }}
-            > <PaperPlane /></button>
+                }}
+              > <PaperPlane /></button>
+            </div>
           </div>
-        </div>
-      </div>
+        ) :
+        <AppLogo />}
     </div>
   );
 };

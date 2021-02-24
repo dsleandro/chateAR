@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Signin from "./components/Signin";
-import Signup from "./components/Signup";
 import Chat from "./components/Chat";
 import { ActiveContacts, LogedIn, Messages } from "./context/AuthContext";
+import "./css/Chat.css";
+import "./css/FormsAuth.css";
 import "./App.css";
+import FormsAuth from './components/FormsAuth';
+
 
 export const AppContext = React.createContext();
 const App = () => {
@@ -21,8 +23,7 @@ const App = () => {
           <ActiveContacts.Provider value={{ activeContact, setActiveContact }}>
             <Messages.Provider value={{ messages, setMessages }}>
 
-              <Route path="/signup" exact component={Signup} />
-              <Route path="/signin" exact component={Signin} />
+              <Route path={["/login", "/signup"]} exact component={FormsAuth} />
               <Route exact path="/" component={Chat} />
 
             </Messages.Provider>

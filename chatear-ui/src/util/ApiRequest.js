@@ -13,7 +13,7 @@ const request = (options) => {
             "Bearer " + localStorage.getItem("accessToken")
         );
     }
-
+    
     const defaults = { headers: headers };
     options = Object.assign({}, defaults, options);
 
@@ -22,7 +22,7 @@ const request = (options) => {
             if (!response.ok) {
                 return Promise.reject(json);
             }
-           
+
             return json;
         })
     );
@@ -97,4 +97,15 @@ export function findChatMessage(id) {
         url: CHAT_SERVICE + "/messages/" + id,
         method: "GET",
     });
+}
+
+export function getLastMessage(senderId, recipientId) {
+    if (!localStorage.getItem("accessToken")) {
+        return Promise.reject("No access token set.");
+    }
+
+    return request({
+        url: CHAT_SERVICE + "/messages/last/" + senderId + "/" + recipientId,
+        method: "GET",
+    })
 }

@@ -2,38 +2,56 @@ import React from "react";
 
 function UserCircle() {
     return (
-        <i role="img" aria-label="User icon" className="fas fa-user-circle" style = {{ fontSize: 1.7 + "em" }}></i>
+        <i role="img" aria-label="User icon" className="fas fa-user-circle"></i>
     )
 }
 
 function Spinner() {
-    return(
-    <i role="img" aria-hidden="true" className="fas fa-spinner fa-spin"></i>
+    return (
+        <i role="img" aria-hidden="true" className="fas fa-spinner fa-spin"></i>
     )
 }
 
-function SignOutIcon() {
+function LogoutIcon() {
     return (
         <i className="fas fa-sign-out-alt" ></i>
     )
 }
 
 function PaperPlane() {
-    return(
-    <i role="img" aria-hidden="true" className="fas fa-paper-plane"></i>
+    return (
+        <i role="img" aria-hidden="true" className="fas fa-paper-plane"></i>
     )
 }
 
-function UserIcon() {
-    return(
-        <i role="img" aria-hidden="true" className="fa fa-user fa-fw"></i>
+function ContactsIcon() {
+    return (
+        <i role="img" aria-hidden="true" className="fa fa-address-book"></i>
     )
 }
 
 function SettingsIcon() {
-    return(
-        <i role="img" aria-hidden="true" className="fa fa-cog fa-fw"></i>
+    return (
+        <i role="img" aria-label="Settings" className="fa fa-cog"></i>
     )
 }
 
-export { Spinner, UserCircle, SignOutIcon, PaperPlane, UserIcon, SettingsIcon };
+function ChatIcon() {
+    return (
+        <i role="img" aria-label="Settings" className="fa fa-comments"></i>
+    )
+}
+
+function StarIcon() {
+    return (
+        <i role="img" aria-label="Add User" className="fa fa-star"></i>
+    )
+}
+
+function DotsMenu() {
+    return (
+        <i role="img" aria-label="Add User" className="fa fa-ellipsis-v"></i>
+    )
+}
+
+export { Spinner, UserCircle, LogoutIcon, PaperPlane, ContactsIcon, SettingsIcon, ChatIcon, StarIcon, DotsMenu };
