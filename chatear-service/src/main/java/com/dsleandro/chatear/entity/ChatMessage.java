@@ -8,6 +8,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,13 +19,22 @@ import java.util.Date;
 @Document
 public class ChatMessage {
    @Id
+   @Null
    private String id;
+   @NotBlank
    private String chatId;
+   @NotBlank
    private String senderId;
+   @NotBlank
    private String recipientId;
-   private String senderName;
-   private String recipientName;
+   @NotBlank
+   private String senderUsername;
+   @NotBlank
+   private String recipientUsername;
+   @NotBlank
    private String content;
+   @NotNull
    private Date timestamp;
+   @NotNull
    private MessageStatus status;
 }
